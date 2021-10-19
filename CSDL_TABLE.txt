@@ -1,0 +1,152 @@
+CREATE TABLE account (
+  Uni_acc int(11) not NULL PRIMARY KEY ,
+  user_name varchar(255) not NULL,
+  token  int(11) not NULL,
+  password varchar(255) not NULL,
+  status int not NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE customer (
+  Lname  varchar(255) not NULL,
+  Fname varchar(255) not NULL,
+  url_img varchar(255) not NULL,
+  coin   int(11) not NULL,
+  phone int not NULL,
+  email varchar(255) not NULL,
+  birthofdate date not NULL,
+  dark_light bit not NULL,
+  Uni_acc int(11) not NULL,
+  CONSTRAINT fk_cus FOREIGN KEY (Uni_acc) REFERENCES account(Uni_acc)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE address (
+  ID_add int(11) not NULL PRIMARY KEY AUTO_INCREMENT,
+  address  varchar(255) not NULL,
+  name varchar(255) not NULL,
+  phone varchar(255) not NULL,
+  Uni_acc   int(11) not NULL,
+  CONSTRAINT fk_add FOREIGN KEY (Uni_acc) REFERENCES account(Uni_acc)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE message (
+  ID_message int(11) not NULL PRIMARY KEY AUTO_INCREMENT,
+  title varchar(255) not NULL,
+  content  varchar(255) not NULL,
+  sender  varchar(255) not NULL,
+  status  int not NULL,
+  date_time date not NULL,
+  Uni_acc int(11) not NULL,
+  CONSTRAINT fk_mess FOREIGN KEY (Uni_acc) REFERENCES account(Uni_acc)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE Shop (
+  ID_shop int(11) not NULL PRIMARY KEY AUTO_INCREMENT,
+  Brand varchar(255) not NULL,
+  url_img  varchar(255) not NULL,
+  address  varchar(255) not NULL,
+  status  int not NULL,
+  Uni_acc int(11) not NULL,
+  CONSTRAINT fk_shop FOREIGN KEY (Uni_acc) REFERENCES account(Uni_acc)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE product (
+  ID_pro int(11) not NULL PRIMARY KEY AUTO_INCREMENT,
+  name_product varchar(255) not NULL,
+  descrip varchar(255) not NULL,
+  status  int not NULL,
+  ID_shop int(11) not NULL,
+  CONSTRAINT fk_pro FOREIGN KEY (ID_shop) REFERENCES Shop(ID_shop)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE detail_product (
+  quantity int(11) not NULL,
+  price  int(11) not NULL,
+  sale  int not NULL,
+  Category varchar(255),
+  Color varchar(255),
+  status  int not NULL,
+  ID_pro  int(11) not NULL,
+  CONSTRAINT fk_detailpro FOREIGN KEY (ID_pro) REFERENCES product(ID_pro)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+CREATE TABLE FollowShop (
+  ID_shop int(11) not NULL,
+  Uni_acc int(11) not NULL,
+  status  int(11) not NULL,
+  CONSTRAINT fk_foll1 FOREIGN KEY (ID_shop) REFERENCES Shop(ID_shop),
+  CONSTRAINT fk_foll2 FOREIGN KEY (Uni_acc) REFERENCES account(Uni_acc)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE voucher (
+  ID_voucher int(11) not NULL PRIMARY KEY AUTO_INCREMENT,
+  token int(11) not NULL,
+  Title varchar(255) not NULL,
+  Content varchar(255) not NULL,
+  Discount int(11) not NULL,
+  Condition1 varchar(255),
+  ID_shop  int(11) not NULL,
+  Uni_acc  int(11) not NULL,
+  CONSTRAINT fk_vour1 FOREIGN KEY (ID_shop) REFERENCES Shop(ID_shop),
+  CONSTRAINT fk_vour2 FOREIGN KEY (Uni_acc) REFERENCES account(Uni_acc)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE bill (
+  ID_bill int(11) not NULL PRIMARY KEY AUTO_INCREMENT,
+  total_money int(11) not NULL,
+  coin_1  int(11) not NULL,
+  coin_2  int(11) not NULL,
+  total_quantity  int(11) not NULL,
+  date_time  datetime not NULL,
+  address  varchar(255) not NULL,
+  phone    varchar(255) not NULL,
+  status  int(11) not NULL,
+  Uni_acc  int(11) not NULL,
+  CONSTRAINT fk_bill FOREIGN KEY (Uni_acc) REFERENCES account(Uni_acc)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE detail_bill (
+  ID  int(11) not NULL PRIMARY KEY AUTO_INCREMENT,
+  total_money int(11) not NULL,
+  quantity  int(11) not NULL,
+  ID_pro  int(11) not NULL,
+  ID_bill  int(11) not NULL,
+  CONSTRAINT fk_detailbill1 FOREIGN KEY (ID_pro) REFERENCES product(ID_pro),
+  CONSTRAINT fk_detailbill2 FOREIGN KEY (ID_bill) REFERENCES bill(ID_bill)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+CREATE TABLE banner (
+  ID_banner  int(11) not NULL PRIMARY KEY AUTO_INCREMENT,
+  url varchar(255) not NULL,
+  status  int(11) not NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+
+CREATE TABLE popup (
+  ID_pop  int(11) not NULL PRIMARY KEY AUTO_INCREMENT,
+  url varchar(255) not NULL,
+  status  int(11) not NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE comments (
+  ID_com  int(11) not NULL PRIMARY KEY AUTO_INCREMENT,
+  content varchar(255) not NULL,
+  date_time  datetime not NULL ,
+  vote int not NULL,
+  Uni_acc  int(11) not NULL,
+  ID_pro  int(11) not NULL,
+  CONSTRAINT fk_com1 FOREIGN KEY (Uni_acc) REFERENCES account(Uni_acc),
+  CONSTRAINT fk_com2 FOREIGN KEY (ID_pro) REFERENCES product(ID_pro)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE cart (
+  ID_cart  int(11) not NULL PRIMARY KEY AUTO_INCREMENT,
+  ID_pro int(11) not NULL,
+  Uni_acc  int(11) not NULL ,
+  quantity int(11) not NULL,
+  price  int(11) not NULL,
+  CONSTRAINT fk_cart1 FOREIGN KEY (Uni_acc) REFERENCES account(Uni_acc),
+  CONSTRAINT fk_cart2 FOREIGN KEY (ID_pro) REFERENCES product(ID_pro)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
